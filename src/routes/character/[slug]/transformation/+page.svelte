@@ -1,45 +1,37 @@
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
-	import Card from '../../../components/card.svelte';
+	import Card from '../../../../components/card.svelte';
 	/** @type {import('./$types').PageData} */
 	export let data;
 	const ch = data.ch;
-
+	const slug = data.slug;
+	const transformations = data.trans;
+	console.log(transformations)
 	onMount(()=>{
 		document.title=data.title;
 	})
 </script>
 
-<a class="back" href="/">Go back</a>
+<a class="back" href="/character/{ch.id}">Go back</a>
 <div class="ch">
-<div class="card">
-	<div class="card__header">
-		<a class="card__header__link" href="/character/{ch.id}">{ch.name}</a>
-		<i>{ch.race}</i>
-		<div class="card__img">
-			<img src="{ch.image}" alt="{ch.name}">
+{#each transformations as transformation, index}
+	<div class="card" id="{index}">
+		<div class="card__header">
+			<a class="card__header__link" href="/character/{ch.id}/transformation/{transformation.id}">Transformación: {transformation.name}</a>
+			<p>Ki: {transformation.ki}</p>
+			<div class="card__img">
+				<img src="{transformation.image}" alt="{transformation.name}">
+			</div>
+		</div>
+
+		<div class="card__content">
+			
+		</div>
+		<div class="card__footer">
+
 		</div>
 	</div>
-
-	<div class="card__content">
-		<p>{ch.description}</p>
-	</div>
-	<div class="card__footer">
-		<span>Grupo: {ch.affiliation}</span>
-		<span>Planeta: <a href="/character/{ch.id}/planet">{ch.originPlanet.name}</a></span>
-		{#if ch.transformations.length}
-		<span>Transformaciones:</span>
-		{#each ch.transformations as transformation, index}
-			<a class="card__footer__link" href="/character/{ch.id}/transformation/#{index}">{transformation.name}</a>
-		{/each}
-		{:else}
-		<span>No posee transformaciones</span>
-		{/if}
-		<span>Ki: {ch.ki}</span>
-		<span>Ki máximo: {ch.maxKi}</span>
-		
-	</div>
-</div>
+{/each}
 </div>
 
 <style>
@@ -51,16 +43,17 @@
 	text-decoration: none;
 }
 a{
-	font-size: 1rem;
-	color: #808080;
-}
-.back{
 	font-size: 2rem;
+	color: #808080;
 }
 .ch{
 	display: flex;
+	flex-direction:column;
 	justify-content: center;
 	align-items: center;
+}
+.back{
+	font-size: 2rem;
 }
 .card{
 	width: 100%;
@@ -71,15 +64,20 @@ a{
 	box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.3);
 	overflow: auto;
 	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	gap: 1rem;
 }
 .card__img{
 	display: flex;
+	justify-content: center;
 	align-items: center;
 }
 .card__img img{
-
-	width: 100px;
+	margin: 1rem 0;
+	width: 300px;
+	border-radius: 20px;
 }
 .card__header{
 	margin: 1rem 0;
@@ -108,10 +106,6 @@ a{
 .card__footer > span{
 	margin: 1rem 0;
 	display: block;
-}
-.card__footer__link{
-	display: block;
-	margin: 1rem 0;
 }
 @media (width > 600px){
 	.card{

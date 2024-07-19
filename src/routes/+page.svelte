@@ -47,7 +47,7 @@
 
 <style>
 :global(body){
-	background: #303030;
+	background: #303050;
 	text-align: center;
 }
 .error{
